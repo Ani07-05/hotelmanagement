@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+
+{% block title %}Bookings{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2>Manage Bookings</h2>
+    {% if action == 'add' or action == 'edit' %}
+        <div class="card">
+            <h3>{% if action == 'add' %}Add Booking{% else %}Edit Booking{% endif %}</h3>
+            <form method="POST" action="{{ url_for('add_booking' if action == 'add' else 'edit_booking', booking_id=booking['id'] if booking else '') }}">
+                <label for="guest_id">Guest ID:</label>
+                <input type="number" id="guest_id" name="guest_id" value="{{ booking['guest_id'] if booking else '' }}" required>
+                
+                <label for="room_id">Room ID:</label>
+                <input type="number" id="room_id" name="room_id" value="{{ booking['room_id'] if booking else '' }}" required>
+                
+                <label for="check_in_date">Check-In Date:</label>
+                <input type="date" id="check_in_date" name="check_in_date" value="{{ booking['check_in_date'] if booking else '' }}" required>
+                
+                <label for="check_out_date">Check-Out Date:</label>
+                <input type="date" id="check_out_date" name="check_out_date" value="{{ booking['check_out_date'] if booking else '' }}" required>
+                
+                <label for="total_price">Total Price:</label>
+                <input type="number" id="total_price" name="total_price" step="0.01" value="{{ booking['total_price'] if booking else '' }}" required>
+                
+                <button type="submit">{% if action == 'add' %}Add Booking{% else %}Update Booking{% endif %}</button>
+            </form>
+        </div>
+    {% else %}
+        <div class="card">
+            <h3>Bookings</h3>
+            <a href="{{ url_for('add_booking') }}" class="button">Add Booking</a>
+            {% if bookings %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Booking ID</th>
+                        <th>Guest Name</th>
+                        <th>Room Number</th>
+                        <th>Check-In</th>
+                        <th>Check-Out</th>
+                        <th>Total Price</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for booking in bookings %}
+                    <tr>
+                        <td data-label="Booking ID">{{ booking['id'] }}</td>
+                        <td data-label="Guest Name">{{ booking['guest_name'] }}</td>
+                        <td data-label="Room Number">{{ booking['room_number'] }}</td>
+                        <td data-label="Check-In">{{ booking['check_in_date'] }}</td>
+                        <td data-label="Check-Out">{{ booking['check_out_date'] }}</td>
+                        <td data-label="Total Price">{{ booking['total_price'] }}</td>
+                        <td data-label="Status">{{ booking['status'] }}</td>
+                        <td data-label="Actions">
+                            <a href="{{ url_for('edit_booking', booking_id=booking['id']) }}" class="table-action">Edit</a>
+                            <a href="{{ url_for('delete_booking', booking_id=booking['id']) }}" class="table-action delete">Delete</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <p class="no-data">No bookings found.</p>
+            {% endif %}
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
+

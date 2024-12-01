@@ -1,0 +1,5 @@
+flask==2.1.0
+flask-sqlalchemy
+flask-login
+werkzeug
+sqlite3

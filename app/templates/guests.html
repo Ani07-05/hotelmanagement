@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block title %}Guests{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2>Manage Guests</h2>
+    {% if action == 'add' or action == 'edit' %}
+        <div class="card">
+            <h3>{% if action == 'add' %}Add Guest{% else %}Edit Guest{% endif %}</h3>
+            <form method="POST" action="{{ url_for('add_guest' if action == 'add' else 'edit_guest', guest_id=guest[0] if action == 'edit' else '') }}">
+                <label for="first_name">First Name:</label>
+                <input type="text" id="first_name" name="first_name" value="{{ guest[1] if action == 'edit' else '' }}" required>
+                
+                <label for="last_name">Last Name:</label>
+                <input type="text" id="last_name" name="last_name" value="{{ guest[2] if action == 'edit' else '' }}" required>
+                
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" value="{{ guest[3] if action == 'edit' else '' }}" required>
+                
+                <label for="phone">Phone:</label>
+                <input type="text" id="phone" name="phone" value="{{ guest[4] if action == 'edit' else '' }}" required>
+                
+                <label for="address">Address:</label>
+                <input type="text" id="address" name="address" value="{{ guest[5] if action == 'edit' else '' }}" required>
+                
+                <button type="submit">{% if action == 'add' %}Add Guest{% else %}Update Guest{% endif %}</button>
+            </form>
+        </div>
+    {% else %}
+        <div class="card">
+            <h3>Guests</h3>
+            <a href="{{ url_for('add_guest') }}" class="button">Add Guest</a>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Guest ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Address</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for guest in guests %}
+                    <tr>
+                        <td data-label="Guest ID">{{ guest[0] }}</td>
+                        <td data-label="Name">{{ guest[1] }} {{ guest[2] }}</td>
+                        <td data-label="Email">{{ guest[3] }}</td>
+                        <td data-label="Phone">{{ guest[4] }}</td>
+                        <td data-label="Address">{{ guest[5] }}</td>
+                        <td data-label="Actions">
+                            <a href="{{ url_for('edit_guest', guest_id=guest[0]) }}" class="table-action">Edit</a>
+                            <a href="{{ url_for('delete_guest', guest_id=guest[0]) }}" class="table-action delete">Delete</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
